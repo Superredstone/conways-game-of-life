@@ -54,30 +54,39 @@ fn main() {
         }
 
         // --- Update ---
-        update_creatures(&mut creatures);
+        let mut new_array: [[bool; CREATURE_SIZE_Y]; CREATURE_SIZE_X] =
+            [(); CREATURE_SIZE_X as usize].map(|_| [(); CREATURE_SIZE_Y as usize].map(|_| false));
+
+        update_creatures(&creatures, &mut new_array);
+        creatures = new_array;
 
         frame_number += 1;
         do_next_frame = false;
     }
 }
 
-fn update_creatures(creatures: &mut [[bool; CREATURE_SIZE_X]; CREATURE_SIZE_Y]) {
+fn update_creatures(
+    creatures: &[[bool; CREATURE_SIZE_X]; CREATURE_SIZE_Y],
+    new_array: &mut [[bool; CREATURE_SIZE_X]; CREATURE_SIZE_Y],
+) {
     for x in 0..GRID_SIZE.x as i32 {
         for y in 0..GRID_SIZE.y as i32 {
             let neighbours = count_neighbour_cell(&creatures, x as usize, y as usize);
             let current_cell = creatures[x as usize][y as usize];
 
             if (current_cell && neighbours < 2) || (current_cell && neighbours > 3) {
-                creatures[x as usize][y as usize] = false;
+                // creatures[x as usize][y as usize] = false;
+                new_array[x as usize][y as usize] = false;
             } else if (current_cell && (neighbours == 2 || neighbours == 3))
                 || (!current_cell && neighbours == 3)
             {
-                creatures[x as usize][y as usize] = true;
+                // creatures[x as usize][y as usize] = true;
+                new_array[x as usize][y as usize] = true;
             }
-
-            if current_cell {
-                println!("X: {} Y: {} NEIGHBOURS: {}", x, y, neighbours);
-            }
+            //
+            // if current_cell {
+            //     println!("X: {} Y: {} NEIGHBOURS: {}", x, y, neighbours);
+            // }
         }
     }
 }
